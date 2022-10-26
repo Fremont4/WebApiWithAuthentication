@@ -61,19 +61,20 @@ namespace AuthenticationApi.Controllers
             var user =  _dataDbContext.Register.Where(x => x.Username.Equals(logmodel.Username) && x.Password.Equals(logmodel.Password)).FirstOrDefault();
             if (user != null)
             {
-                //var userRoles = await _dataDbContext.GetRolesAsync(user);
+            //    var userRoles =  userManager.GetRolesAsync(user);
 
                 var authClaims = new List<Claim>
                 {
                      new Claim("Email",user.Email!=null?user.Email:""),
                     new Claim("Username",user.Username!=null?user.Username:""),
+                    new Claim(ClaimTypes.Role,"Admin"),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
                 //foreach (var userRole in userRoles)
                 //{
-                //    //authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                //    authClaims.Add(new Claim("Role", userRole != null ? userRole.Role : ""));
+                //    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+
                 //}
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
